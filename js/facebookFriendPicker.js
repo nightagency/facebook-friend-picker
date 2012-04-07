@@ -44,7 +44,7 @@
 		/** Initialise the widget
 		*/
 		_appInit : function(callback) {
-			self = this;
+			var self = this;
 			
 			this._target = $(this.element).addClass('fb-friend-picker');
 			this._hasGroups = (this.options.groups) ? true : false;			
@@ -88,19 +88,18 @@
 		/** Setup our internal data structures
 		*/		
 		_setupData : function(data) {
-			
-			self._friendsLookupObj= {};
-			self._preSelectedLookupObj= {};
-			self._allFriends = [];
-			self._selectedFriends = [];
-			self._preSelected = self.options.preSelected;
+			this._friendsLookupObj= {};
+			this._preSelectedLookupObj= {};
+			this._allFriends = [];
+			this._selectedFriends = [];
+			this._preSelected = this.options.preSelected;
 
 			//Setup our internal data structure to hold all friends						
 			for(var j in data) { 
 				var friend  = data[j];				
-				self._friendsLookupObj[friend.id.toString()] = friend.name;
+				this._friendsLookupObj[friend.id.toString()] = friend.name;
 					
-				self._allFriends.push(
+				this._allFriends.push(
 					{
 						name: friend.name,
 						id: friend.id.toString()
@@ -109,19 +108,19 @@
 			};
 			
 			//Handle Preselects
-			if(self._hasPreSelects) {
-				var preSelects = self.options.preSelected;
+			if(this._hasPreSelects) {
+				var preSelects = this.options.preSelected;
 				for(var i=0; i < preSelects.length; i++) {
-					self._preSelectedLookupObj[preSelects[i].toString()] = self._friendsLookupObj[preSelects[i].toString()];
-					self._selectedFriends.push(preSelects[i]);
+					this._preSelectedLookupObj[preSelects[i].toString()] = this._friendsLookupObj[preSelects[i].toString()];
+					this._selectedFriends.push(preSelects[i]);
 				}
 			};
 
 			//Setup our internal data structure to hold the groups			
-			if(self.options.groups) {
+			if(this.options.groups) {
 				var ctr = 0;
 				this._groups = [];
-				var groups = self.options.groups;
+				var groups = this.options.groups;
 				
 				for (var i in groups) {
 					this._groups[ctr] = { name : i };
@@ -130,7 +129,7 @@
 					for(var j=0; j<group.length; j++) {
 						this._groups[ctr].friends.push(
 							{
-								name: self._friendsLookupObj[group[j]],
+								name: this._friendsLookupObj[group[j]],
 								id: group[j].toString()
 							}
 						)
@@ -221,10 +220,10 @@
 			var output= [],
 					friends;
 			
-			if(self._hasPreSelects) {
-				for(var i in self._preSelectedLookupObj) {
+			if(this._hasPreSelects) {
+				for(var i in this._preSelectedLookupObj) {
 					output.push({
-						name : self._preSelectedLookupObj[i],
+						name : this._preSelectedLookupObj[i],
 						id : i
 					});
 				}
@@ -233,7 +232,7 @@
 			//If the user passed in groups restrict the pool to those users
 			friends = (this._selectedGroup !== -1) ? this._groups[this._selectedGroup].friends : this._allFriends;			
 			for(var i in friends) {
-				if($.inArray(friends[i].id, self._preSelected) == -1) {
+				if($.inArray(friends[i].id, this._preSelected) == -1) {
 					output.push({
 						name : friends[i].name,
 						id : friends[i].id
@@ -270,28 +269,28 @@
 		/** Handle when a friend is clicked
 		*/		
 		_handleSelect : function($el) {
-				self = this;
+				var self = this;
 				$this = $($el);
 				
-				if(self.options.singleSelect)  { // If the restricting option for selecting only one is enabled
+				if(this.options.singleSelect)  { // If the restricting option for selecting only one is enabled
 					$('.friend-row', this.element).removeClass('selected')
 						.data('on',false);
-					self._selectedFriends = [];
+					this._selectedFriends = [];
 				}
 				
 				// Code to toggle selected
 				if(!$this.data('on'))  {
 					$this.data('on', true);
 					$this.addClass('selected');
-					self._selectedFriends.push($this.data('friend-id'));
+					this._selectedFriends.push($this.data('friend-id'));
 				}
 				else if($this.data('on'))  {
 					$this.data('on', false);
 					$this.removeClass('selected');
-					self._selectedFriends = self._deleteFromArray($this.data('friend-id'), self._selectedFriends);
+					this._selectedFriends = this._deleteFromArray($this.data('friend-id'), this._selectedFriends);
 				}
 				
-				console.log(self._selectedFriends);
+				console.log(this._selectedFriends);
 		},
 		
 		/*********************************
@@ -337,7 +336,7 @@
 		/** Resets the plugin
 		*/		
 		resetFinder : function() {
-			self._hasBeenInitialized = false;
+			this._hasBeenInitialized = false;
 		}
 	});
 })(jQuery);
