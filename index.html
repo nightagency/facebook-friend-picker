@@ -6,52 +6,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script src="js/jquery-ui-1.8.17.custom.min.js"></script>
 	<script src="js/facebookFriendPicker.js"></script>
-	<style type="text/css">
-		.fb-friend-picker .content .friend-row {
-			margin: 0 10px 0 0;
-			padding:10px;
-			margin:10px;
-		}
-		
-		.fb-friend-picker .content .selected {		
-			background: #dfdfdf;
-		}
-		.fb-friend-picker .content h3 {
-			float:left;
-			font-size: 11px;
-		}
-		.fb-friend-picker .content .friend-pic {
-			float:left;
-			width: 32px;
-		}
-		
-		/*******************************
-			HACKS
-		*******************************/
-		
-		.clearfix:after {
-			content: ".";
-			display: block;
-			clear: both;
-			visibility: hidden;
-			line-height: 0;
-			height: 0;
-		}
-
-		.clearfix {
-			display: inline-block;
-		}
-
-		html[xmlns] .clearfix {
-			display: block;
-		}
-
-		* html .clearfix {
-			height: 1%;
-		}
-		
-	</style>
    <link rel="stylesheet" href="css/custom-theme/jquery-ui-1.8.18.custom.css">
+   <link rel="stylesheet" href="css/friend-picker.css">
 	<script>
 		$(document).ready(function() {
 			
@@ -59,24 +15,24 @@
 			// you have to initialize the friend picker first
 			$('#friend-picker').facebookFriendPicker({
 				me : true,
-				preSelected: ['100002132998766', '100002070884448'],
+				//preSelected: ['100002132998766', '100002070884448'],
 				singleSelect : false,
 				groups: {
-					"Wedding Party" : [1553704525,100002070884448],
-					"Group 2" : [100002132998766, 100003066204095]
+					"Wedding Party" : [1553704525,100002070884448]
+					//,"Group 2" : [100002132998766, 100003066204095]
 				},				
 				appId: '189097194541052',
 				loadingImage: 'img/loading.gif',
 				autoOpen: false,
 				draggable: false,
-				title: 'do something',
+				title: 'Select a Friend',
 				resizable: false,
 				height: 480,
 				width: 650,
 				modal: true,
 				buttons: {
 					Select: function(e) {
-						console.log('hiee', $(this).facebookFriendPicker('getSelectedFriends'));
+						console.log('selected friends', $(this).facebookFriendPicker('getSelectedFriends'));
 						$(this).facebookFriendPicker('close');
 					},
 					Cancel: function() {
@@ -91,7 +47,7 @@
 			});	
 			
 			
-			//$('#friend-picker').facebookFriendPicker('open'); //Debug
+			$('#friend-picker').facebookFriendPicker('open'); //Debug
 			
 		});
 	

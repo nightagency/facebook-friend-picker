@@ -145,15 +145,16 @@
 		_initRender : function(friend_data) {
 			var self = this,
 					$markup = $('<div>', {class: 'container'}),
+					$utils = $('<div>', {class: 'utils'}),
 					$nav = $('<div>', {class : 'nav'}),
 					$search = $('<input>', {class : 'search'})
 						.bind('keyup', function(e) {
 							self._searchTerm = $('.search', this.element).val();
 							self._populateContent();
 						});
-			
+			$utils.append($nav, $search);
 			$content = $('<div>', {class : 'content'});
-			$markup.append($nav, $search, $content);
+			$markup.append($utils, $content);
 			$(this._target).html($markup);
 			
 			self._populateNav();
@@ -195,7 +196,7 @@
 					self = this;
 			for(var i=0; i<friendData.length; i++) {
 				var friend = friendData[i];
-				var $el = $('<a>', {href : '#', class : 'friend-row clearfix'}).data('friend-id', friend.id);
+				var $el = $('<div>', {href : '#', class : 'friend-row'}).data('friend-id', friend.id);
 				$el.append($('<img>', {src: 'http://graph.facebook.com/' + friend.id + '/picture', class : 'friend-pic'}));
 				$el.append('<h3>' + friend.name + '</h3>');
 				var theId = friend.id;
@@ -256,10 +257,12 @@
 			var len = friends.length;
 			if (filter.length >= 0) {
 				for (i = 0 ; i < len; i ++) {
-					var name = friends[i].name.toUpperCase();
-					if (name.indexOf(filter) !== -1) {
-						output.push(friends[i]);
-					}
+          if(friends[i].name) {
+  					var name = friends[i].name.toUpperCase();
+  					if (name.indexOf(filter) !== -1) {
+  						output.push(friends[i]);
+  					}
+				  }
 				}
 			}
 			
