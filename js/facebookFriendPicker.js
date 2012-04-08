@@ -33,7 +33,7 @@
 			OUR FUNCTIIONS
 		*********************************/		
 		
-		_create: function() {			
+		_create: function() {
 			return $.ui.dialog.prototype._create.apply(this, arguments);
 		},
 		
