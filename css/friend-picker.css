@@ -8,7 +8,9 @@
 	float:left;
 	cursor:pointer;
 }
-
+.fb-friend-picker.loading{
+  background:url(../img/loading.gif) center no-repeat;
+}
 .fb-friend-picker .content .selected {		
 	background: #dfdfdf;
 }
