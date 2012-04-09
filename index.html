@@ -21,7 +21,6 @@
 					//,"Group 2" : [100002132998766, 100003066204095]
 				},				
 				appId: '189097194541052',
-				loadingImage: 'img/loading.gif',
 				autoOpen: false,
 				draggable: false,
 				title: 'Select a Friend',
@@ -31,8 +30,13 @@
 				modal: true,
 				buttons: {
 					Select: function(e) {
-						console.log('selected friends', $(this).facebookFriendPicker('getSelectedFriends'));
 						$(this).facebookFriendPicker('close');
+						var selected= $(this).facebookFriendPicker('getSelectedFriends');
+						var selectedHTML = '';
+						for(var i=0; i<selected.length; i++){
+						  selectedHTML+= '<p><img src="http://graph.facebook.com/' + selected[i].id + '/picture/">' + selected[i].name + '</p>';
+						}
+						$('#selected').html(selectedHTML);
 					},
 					Cancel: function() {
 						$('#friend-picker').facebookFriendPicker('resetFinder');
@@ -59,5 +63,6 @@
 <body>
 	<a href="#" class="choose-friends">Launch Friend Picker</a>
 	<div id="friend-picker"></div>
+	<div id="selected"></div>
 </body>
 </html>

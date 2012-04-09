@@ -26,7 +26,11 @@
 		_target : null,
 		
 		options: {
-			urlFacebookScript:'http://connect.facebook.net/en_US/all.js'
+			urlFacebookScript:'http://connect.facebook.net/en_US/all.js',
+			appId: undefined,
+			singleSelect: false,
+			groups: undefined,
+			preSelected: undefined
 		},
 		
 		/*********************************
@@ -69,7 +73,7 @@
 		*/		
 		_fbLogin: function(){
 			var self = this;
-			self.element.addClass('loading');
+			self.element.addClass(self.options.loadingClass);
 			FB.login(function(response) {
 				if(response.status == "connected"){  //response.scope && response.scope.indexOf('user_photos') != -1){
 					self.element.addClass('loading');
@@ -201,7 +205,7 @@
 		/** Populate the Content 
 		*/
 		_populateContent: function(data){
-			
+			console.log('pop', data);
 			var $target= $('.content', this._target),
 					friendData = (this._searchTerm == "" && this._selectedGroup == -1) ? this._getAllFriends() : this._getFilteredFriends(),
 					$output = $('<div>'),
@@ -331,21 +335,6 @@
 			        return value.id != val;
 			      });
 		},
-		/** Show preloader
-		*/		
-		_showLoader: function() {
-			this.element.css({
-				background:'url(' + this.options.loadingImage + ') center no-repeat'
-			});
-		},
-		/** Hide preloader
-		*/		
-		_hideLoader: function() {
-			this.element.css({
-				background:'none'
-			});
-		},
-		
 		/*********************************
 			PUBLIC FUNCTIONS
 		*********************************/
