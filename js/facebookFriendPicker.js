@@ -1,5 +1,5 @@
 /**
- * jquery ui stub
+ * jquery ui plugin for Facebook friend picking
  *
  * @author darius
 					 Armaan Ahluwalia
@@ -33,7 +33,7 @@
 			OUR FUNCTIIONS
 		*********************************/		
 		
-		_create: function() {			
+		_create: function() {
 			return $.ui.dialog.prototype._create.apply(this, arguments);
 		},
 		
@@ -69,10 +69,11 @@
 		*/		
 		_fbLogin: function(){
 			var self = this;
+			self.element.addClass('loading');
 			FB.login(function(response) {
 				if(response.status == "connected"){  //response.scope && response.scope.indexOf('user_photos') != -1){
-					console.log('logged in successfully!');
 					FB.api('/me/friends', function(response) {
+  					self.element.removeClass('loading');
 						if (response.data) {
 							self._setupData(response.data);
 							self._initRender(response.data);
@@ -81,15 +82,17 @@
 						}
 					});
 				}else{
+				  self.element.removeClass('loading');
 					console.error('login fail!');
+					self.close();
 				}
 			});
 		},
 		/** Setup our internal data structures
 		*/		
 		_setupData : function(data) {
-			this._friendsLookupObj= {};
-			this._preSelectedLookupObj= {};
+			this._friendsLookupObj = {};
+			this._preSelectedLookupObj = {};
 			this._allFriends = [];
 			this._selectedFriends = [];
 			this._preSelected = this.options.preSelected;
@@ -109,13 +112,22 @@
 			
 			//Handle Preselects
 			if(this._hasPreSelects) {
+				// only allow one selection if singleSelect is true
+				if(this.options.singleSelect && this.options.preSelected.length > 1) {
+				  this.options.preSelected = this.options.preSelected.slice(0,1);
+				}
+
 				var preSelects = this.options.preSelected;
+				
 				for(var i=0; i < preSelects.length; i++) {
-					this._preSelectedLookupObj[preSelects[i].toString()] = this._friendsLookupObj[preSelects[i].toString()];
-					this._selectedFriends.push(preSelects[i]);
+				  var friendName = this._friendsLookupObj[preSelects[i].toString()];
+					this._preSelectedLookupObj[preSelects[i].toString()] = friendName;
+					this._selectedFriends.push({
+					  id: preSelects[i],
+					  name: friendName
+					});
 				}
 			};
-
 			//Setup our internal data structure to hold the groups			
 			if(this.options.groups) {
 				var ctr = 0;
@@ -144,16 +156,16 @@
 		*/
 		_initRender : function(friend_data) {
 			var self = this,
-					$markup = $('<div>', {class: 'container'}),
-					$utils = $('<div>', {class: 'utils'}),
-					$nav = $('<div>', {class : 'nav'}),
-					$search = $('<input>', {class : 'search'})
+					$markup = $('<div>', {'class': 'container'}),
+					$utils = $('<div>', {'class': 'utils'}),
+					$nav = $('<div>', {'class' : 'nav'}),
+					$search = $('<input>', {'class' : 'search'})
 						.bind('keyup', function(e) {
 							self._searchTerm = $('.search', this.element).val();
 							self._populateContent();
 						});
 			$utils.append($nav, $search);
-			$content = $('<div>', {class : 'content'});
+			$content = $('<div>', {'class' : 'content'});
 			$markup.append($utils, $content);
 			$(this._target).html($markup);
 			
@@ -183,7 +195,6 @@
 				
 				$nav.append($select);
 			}
-			console.log('populating nav');
 		},
 		
 		/** Populate the Content 
@@ -196,11 +207,23 @@
 					self = this;
 			for(var i=0; i<friendData.length; i++) {
 				var friend = friendData[i];
-				var $el = $('<div>', {href : '#', class : 'friend-row'}).data('friend-id', friend.id);
-				$el.append($('<img>', {src: 'http://graph.facebook.com/' + friend.id + '/picture', class : 'friend-pic'}));
+				var $el = $('<div>', {href : '#', 'class' : 'friend-row'})
+				  .data({
+				    "friend-id": friend.id,
+				    "friend-name": friend.name
+				  });
+				$el.append($('<img>', {src: 'http://graph.facebook.com/' + friend.id + '/picture', 'class' : 'friend-pic'}));
 				$el.append('<h3>' + friend.name + '</h3>');
-				var theId = friend.id;
-				var isSelected = (self._selectedFriends.indexOf(friend.id.toString()) !== -1);
+				
+				var isSelected = (function() {
+				  for(var j=0; j<self._selectedFriends.length; j++) {
+				    if(self._selectedFriends[j].id === friend.id.toString()) {
+				      return true;
+				    }
+				  }
+				  return false;
+				})();
+				
 				if(isSelected) $el.addClass('selected').data('on', true);
 				$output.append($el);
 				$el.click(function(e) {
@@ -285,7 +308,10 @@
 				if(!$this.data('on'))  {
 					$this.data('on', true);
 					$this.addClass('selected');
-					this._selectedFriends.push($this.data('friend-id'));
+					this._selectedFriends.push({
+				    id: $this.data('friend-id'),
+				    name: $this.data('friend-name')
+					});
 				}
 				else if($this.data('on'))  {
 					$this.data('on', false);
@@ -293,7 +319,7 @@
 					this._selectedFriends = this._deleteFromArray($this.data('friend-id'), this._selectedFriends);
 				}
 				
-				console.log(this._selectedFriends);
+				console.log('clicked', this._selectedFriends, $this);
 		},
 		
 		/*********************************
@@ -301,7 +327,7 @@
 		*********************************/		
 		_deleteFromArray : function(val, arr) {
 			return jQuery.grep(arr, function(value) {
-			        return value != val;
+			        return value.id != val;
 			      });
 		},
 		/** Show preloader
@@ -326,7 +352,6 @@
 		/** When the plugin is opened
 		*/		
 		open: function() {
-			console.log('has been initialized', this._hasBeenInitialized);
 			if(this._hasBeenInitialized == false) this._appInit();
 			this._hasBeenInitialized = true;
 			return $.ui.dialog.prototype.open.apply(this, arguments);
@@ -334,6 +359,9 @@
 		/** Return selected friends
 		*/		
 		getSelectedFriends: function() {
+		  if(this.options.singleSelect && this._selectedFriends.length > 1) {
+		    return this._selectedFriends.slice(0,1);
+		  }
 			return this._selectedFriends;
 		},
 		/** Resets the plugin
