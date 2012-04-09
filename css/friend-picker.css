@@ -1,0 +1,46 @@
+.fb-friend-picker .content .friend-row {
+	margin: 0 10px 0 0;
+	padding:10px;
+	margin:2px;
+	width:81px;
+	height:70px;
+	overflow:hidden;
+	float:left;
+	cursor:pointer;
+}
+.fb-friend-picker.loading{
+  background:url(../img/loading.gif) center no-repeat;
+}
+.fb-friend-picker .content .selected {		
+	background: #dfdfdf;
+}
+.fb-friend-picker .content h3 {
+	float:left;
+	font-size: 11px;
+	margin:4px;
+}
+.fb-friend-picker .content .friend-pic {
+	float:left;
+	width: 32px;
+}
+
+/* search and nav */
+.utils{
+  height:26px;
+  padding:4px;
+}
+.utils .nav{
+  float:left;
+  margin-right:10px;
+}
+.utils .search{
+  float:left;
+  width:250px;
+  border:1px solid #CCC;
+}
+
+#friend-picker{
+  overflow:auto;
+  display:none;
+  margin-top:20px;
+}

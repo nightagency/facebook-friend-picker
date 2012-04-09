@@ -72,6 +72,7 @@
 			self.element.addClass('loading');
 			FB.login(function(response) {
 				if(response.status == "connected"){  //response.scope && response.scope.indexOf('user_photos') != -1){
+					self.element.addClass('loading');
 					FB.api('/me/friends', function(response) {
   					self.element.removeClass('loading');
 						if (response.data) {
