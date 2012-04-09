@@ -8,9 +8,7 @@
 	float:left;
 	cursor:pointer;
 }
-.fb-friend-picker.loading{
-  background:url(../img/loading.gif) center no-repeat;
-}
+
 .fb-friend-picker .content .selected {		
 	background: #dfdfdf;
 }
@@ -27,6 +25,7 @@
 /* search and nav */
 .utils{
   height:26px;
+  background:#f1f1f1;
   padding:4px;
 }
 .utils .nav{
@@ -39,8 +38,19 @@
   border:1px solid #CCC;
 }
 
-#friend-picker{
-  overflow:auto;
-  display:none;
-  margin-top:20px;
-}
+/* Facebook Dialogue Styles */
+.ui-widget-overlay {background: none;}
+.ui-dialog{background: rgba(82, 82, 82, 0.7);padding:10px;border-radius: 8px;-webkit-border-radius: 8px;}
+.ui-dialog .ui-dialog-titlebar{background: #6D84B4;border: 1px solid #3B5998;font-family: "lucida grande",tahoma,verdana,arial,sans-serif;color: white;font-size: 14px;font-weight: bold;}
+#friend-picker{border-left: 1px solid #555;border-right: 1px solid #555;border-bottom: 1px solid #CCC;background-color:#FFF;padding:0px;overflow:auto;display:none}
+#friend-picker p, #friend-picker div{font-family: "lucida grande",tahoma,verdana,arial,sans-serif;font-size:13px;}
+.ui-widget-content{background: none none 50% top repeat-x;border:none;}
+.ui-dialog-titlebar-close{display:none}
+.ui-dialog .ui-corner-all{-moz-border-radius: 0px;-webkit-border-radius: 0px;border-radius: 0px;}
+.ui-dialog .ui-dialog-buttonpane{background: #F2F2F2; margin:0;border-left: 1px solid #555;border-right: 1px solid #555;border-bottom: 1px solid #555;padding:8px}
+.ui-dialog .ui-dialog-buttonpane button{ margin:0 0 0 10px;padding:2px 6px;font-size:13px;}
+.ui-state-default, .ui-widget-content .ui-state-default{border-color: #29447E;color: #FFF;background:#6D84B4;}
+.ui-state-hover, .ui-widget-content .ui-state-hover{border-color: #29447E;background:#6D84B4;}
+.ui-state-active, .ui-widget-content .ui-state-active{background: #4F6AA3;border-bottom-color: #29447E;box-shadow: 0 1px 0 rgba(0, 0, 0, .05); -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .05);}
+.ui-button-text-only .ui-button-text {padding:0px;}
+.ui-dialog .ui-dialog-titlebar {padding: 5px;}
