@@ -27,6 +27,10 @@
 		
 		options: {
 			urlFacebookScript:'http://connect.facebook.net/en_US/all.js',
+			autoOpen: false,
+			title: 'Select a Friend',			
+			height: 400,
+			width: 650,			
 			appId: undefined,
 			singleSelect: false,
 			groups: undefined,
@@ -49,6 +53,11 @@
 		*/
 		_appInit : function(callback) {
 			var self = this;
+			
+			self.element.addClass('loading');
+			
+			if (!this.options.appId) throw new Error('Did not provide the app id to facebookFriendPicker');
+			if (!this._numKeys(this.options.buttons)) throw new Error('Did not provide any buttons to facebookFriendPicker');
 			
 			this._target = $(this.element).addClass('fb-friend-picker');
 			this._hasGroups = (this.options.groups) ? true : false;			
@@ -76,9 +85,7 @@
 			self.element.addClass(self.options.loadingClass);
 			FB.login(function(response) {
 				if(response.status == "connected"){  //response.scope && response.scope.indexOf('user_photos') != -1){
-					self.element.addClass('loading');
 					FB.api('/me/friends', function(response) {
-  					self.element.removeClass('loading');
 						if (response.data) {
 							self._setupData(response.data);
 							self._initRender(response.data);
@@ -164,7 +171,7 @@
 					$markup = $('<div>', {'class': 'container'}),
 					$utils = $('<div>', {'class': 'utils'}),
 					$nav = $('<div>', {'class' : 'nav'}),
-					$search = $('<input>', {'class' : 'search'})
+					$search = $('<input>', {'class' : 'search', 'placeholder' : 'Search Friends'})
 						.bind('keyup', function(e) {
 							self._searchTerm = $('.search', this.element).val();
 							self._populateContent();
@@ -205,7 +212,9 @@
 		/** Populate the Content 
 		*/
 		_populateContent: function(data){
-			console.log('pop', data);
+			
+			this.element.removeClass('loading');
+			
 			var $target= $('.content', this._target),
 					friendData = (this._searchTerm == "" && this._selectedGroup == -1) ? this._getAllFriends() : this._getFilteredFriends(),
 					$output = $('<div>'),
@@ -324,7 +333,6 @@
 					this._selectedFriends = this._deleteFromArray($this.data('friend-id'), this._selectedFriends);
 				}
 				
-				console.log('clicked', this._selectedFriends, $this);
 		},
 		
 		/*********************************
@@ -334,6 +342,14 @@
 			return jQuery.grep(arr, function(value) {
 			        return value.id != val;
 			      });
+		},
+		_numKeys : function numKeys(obj)
+		{
+		    var count = 0;
+		    for(var prop in obj) {
+		        count++;
+		    }
+		    return count;
 		},
 		/*********************************
 			PUBLIC FUNCTIONS
@@ -349,10 +365,12 @@
 		/** Return selected friends
 		*/		
 		getSelectedFriends: function() {
-		  if(this.options.singleSelect && this._selectedFriends.length > 1) {
-		    return this._selectedFriends.slice(0,1);
+		  if(this.options.singleSelect) {
+		    var selected = this._selectedFriends.slice(0,1);
+				return (selected[0]) ? selected[0] : false;
 		  }
-			return this._selectedFriends;
+			var selected = this._selectedFriends;
+			return (this._selectedFriends[0]) ? this._selectedFriends : false;
 		},
 		/** Resets the plugin
 		*/		

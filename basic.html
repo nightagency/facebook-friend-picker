@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Facebook Friend Picker Dialog</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="js/jquery-ui-1.8.17.custom.min.js"></script>
+	<script src="js/facebookFriendPicker.js"></script>
+   <link rel="stylesheet" href="css/friend-picker.css">
+	<script>
+		$(document).ready(function() {
+			
+			// you have to initialize the friend picker first
+			$('#friend-picker').facebookFriendPicker({
+				appId: '189097194541052',
+				singleSelect: true,
+				buttons: {
+					Select: function(e) {
+						$(this).facebookFriendPicker('close');
+						var selected= $(this).facebookFriendPicker('getSelectedFriends');
+						var selectedHTML= '<p><img src="http://graph.facebook.com/' + selected.id + '/picture/">' + selected.name + '</p>';
+						$('#selected').html(selectedHTML);
+					},
+					Cancel: function() {
+						$('#friend-picker').facebookFriendPicker('resetFinder');
+						$(this).facebookFriendPicker('close');
+					}
+				}				
+			});
+
+			$('.choose-friends').click(function() {
+				$('#friend-picker').facebookFriendPicker('open');
+				return false;
+			});
+			
+		});
+	
+	</script>
+	
+	<style type="text/css" media="screen">
+		#friend-picker{display:none;}
+	</style>
+</head>
+<body>
+	<a href="#" class="choose-friends">Launch Friend Picker</a>
+	<div id="friend-picker"></div>
+	<div id="selected"></div>
+</body>
+</html>
